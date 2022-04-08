@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 f1 = lambda x,y: x*y + 2*y
 f2 = lambda x,y,Q: abs(np.cos(x/Q) + 2*np.sin(y/Q) )
 f3 = lambda x,y,Q: abs(3*(x/Q) - np.power(y/Q, 1/3))
-f4 = lambda S: random.seed(S)
+f4 = lambda S: random.random()
 #f5 = lambda S, x, y, C: x + 
 
 def f5(f, C, S):
@@ -31,34 +31,16 @@ def normalisation(g, B):
 
 def RSE(g, R, C, N):
 
-    step = int( C/N ) 
-    if (C/step > int(C/step)):
-        size = int(C/step)+1
-    else:
-        size = int(C/step)
-
     res = 0.0
     print("R",len(R))
     print("g",len(R))
-    print("size",size)
-    print("step",step)
-    """
+
     size = len(g)
     for i in range(size):
         for j in range(size):
-            res += (g[i][j] - R[i][j])**2
+            res += (int(g[i][j]) - int(R[i][j]))**2
 
-    """
     return np.sqrt(res)
-
-def quantisation(num, B):
-
-    max_bits = (2**B) - 1
-    num = num.astype(np.uint8)
-    while num > max_bits:
-        num = num >> 1  
-
-    return num
 
 def function_choice(f, x, y, C, Q, N, B, S, function):
 
@@ -69,6 +51,7 @@ def function_choice(f, x, y, C, Q, N, B, S, function):
     if f == 3:
         return f3(x,y,Q)
     if f == 4:
+        print(f4(S))
         return f4(S)
     
 def downsampling(g, C, N):
@@ -83,16 +66,12 @@ def downsampling(g, C, N):
     f = np.zeros( (f_size, f_size ) )
     fi, fj = 0, 0
     for i in range(0, C, step):
-        fj = 0
         for j in range(0, C, step):
-#            print(i, j)
             f[fi][fj] = g[i][j]
-#            f[fi][fj] = 0
-#            f[fi][fj] = quantisation(g[i][j], B)
             fj += 1
         fi += 1
+        fj = 0
     
-#    return f[:fi][:fj]
     return f
 
 # Reading input
@@ -103,6 +82,8 @@ Q = int(input())
 N = int(input())
 B = int(input())
 S = int(input())
+
+random.seed(S)
 
 f = np.zeros( (C, C) )
 
@@ -116,11 +97,11 @@ else:
 g = downsampling(f, C, N)
 
 g = normalisation(g, B)
-g = g.astype(np.uint8) >> (8 - B)
+#g = g.astype(np.uint8) >> (8 - B)
 
 # Opening file
 R = np.load(filename).astype(np.uint8)
-print(RSE(g,R, C, N))
+#print(RSE(g,R, C, N))
 
 plt.figure()
 fig = plt.subplot(1, 2,1)
