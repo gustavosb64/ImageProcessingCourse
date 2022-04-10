@@ -8,7 +8,6 @@ f1 = lambda x,y: x*y + 2*y
 f2 = lambda x,y,Q: abs(np.cos(x/Q) + 2*np.sin(y/Q) )
 f3 = lambda x,y,Q: abs(3*(x/Q) - np.power(y/Q, 1/3))
 f4 = lambda S: random.random()
-#f5 = lambda S, x, y, C: x + 
 
 def f5(f, C, S):
     
@@ -33,12 +32,12 @@ def RSE(g, R, C, N):
 
     res = 0.0
     print("R",len(R))
-    print("g",len(R))
+    print("g",len(g))
 
-    size = len(g)
+    size = len(R)
     for i in range(size):
         for j in range(size):
-            res += (int(g[i][j]) - int(R[i][j]))**2
+            res += (float(g[i][j]) - float(R[i][j]))**2
 
     return np.sqrt(res)
 
@@ -51,13 +50,16 @@ def function_choice(f, x, y, C, Q, N, B, S, function):
     if f == 3:
         return f3(x,y,Q)
     if f == 4:
-        print(f4(S))
         return f4(S)
     
 def downsampling(g, C, N):
+    
+    print(C, N, C/N)
 
     step = int( C/N ) 
+    print("step", step)
     
+    #Dimensões da matriz final
     if (C/step > int(C/step)):
         f_size = int(C/step)+1
     else:
@@ -72,7 +74,7 @@ def downsampling(g, C, N):
         fi += 1
         fj = 0
     
-    return f
+    return f 
 
 # Reading input
 filename = str(input()).rstrip()
@@ -83,10 +85,12 @@ N = int(input())
 B = int(input())
 S = int(input())
 
+#Inicializando a seed a ser usada em random
 random.seed(S)
 
 f = np.zeros( (C, C) )
 
+#A função 5 retorna a matriz completa, ao passo que as outras calculam cada pixel
 if f_choice == 5:
     f = f5(f, C, S)
 else:
@@ -101,12 +105,15 @@ g = normalisation(g, B)
 
 # Opening file
 R = np.load(filename).astype(np.uint8)
-#print(RSE(g,R, C, N))
+print(RSE(g,R, C, N))
 
+# Plotando imagens
 plt.figure()
-fig = plt.subplot(1, 2,1)
+fig = plt.subplot(2, 2,1)
 plt.imshow(g, cmap="gray")
-fig = plt.subplot(1, 2,2)
+fig = plt.subplot(2, 2,2)
 plt.imshow(R, cmap="gray")
+fig = plt.subplot(2, 2,3)
+plt.imshow(f, cmap="gray")
 
 plt.show()
