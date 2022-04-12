@@ -1,6 +1,6 @@
 import numpy as np
 import random 
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # Defined functions
 f1 = lambda x,y: x*y + 2*y
@@ -21,6 +21,7 @@ def f5(f, C, S):
 
     return f
 
+
 def normalisation(g):
     min_value = np.min(g)
     max_value = np.max(g)
@@ -28,10 +29,31 @@ def normalisation(g):
     res = (g - min_value) / (max_value - min_value) 
     return res*255
 
+
 # Root Squared Error
-def RSE(g, R):
+#   compares the generated image g to the reference image R
+def RSE(g, filename):
+
+    # Opening reference file
+    R = np.load(filename).astype(np.uint8)
 
     return np.sqrt(np.sum((g - R)**2))
+
+
+# Digitizing simulation
+def downsampling(f, C, N):
+    
+    # Define the step used in the process
+    step = int(C/N) 
+
+    # Generating the digital image g
+    g = np.zeros( (N, N) )
+    for i in range(N):
+        for j in range(N):
+            g[i][j] = f[i*step][j*step]
+
+    return g
+
 
 def function_choice(f, x, y, Q):
 
@@ -44,15 +66,6 @@ def function_choice(f, x, y, Q):
     if f == 4:
         return f4() 
     
-def downsampling(f, C, N):
-    
-    step = int(C/N) 
-    g = np.zeros( (N, N) )
-    for i in range(N):
-        for j in range(N):
-            g[i][j] = f[i*step][j*step]
-
-    return g
 
 # Reading input
 filename = str(input()).rstrip()
@@ -66,6 +79,7 @@ S = int(input())
 # Initializing the seed for random functions
 random.seed(S)
 
+# Creating array used for the scene
 f = np.zeros( (C, C) )
 
 # Function 5 returns the full array, while the other ones return the value in each pixel
@@ -76,18 +90,19 @@ else:
         for j in range (C):
             f[i][j] = function_choice(f_choice, i, j, Q)
 
-g = downsampling(f, C, N)
+# Sampling and normalisation 
+# g refers to the generated digital image
+g = downsampling(f, C, N) 
 g = normalisation(g)
 
-# Quantization via bitwise shift
+# Quantisation via bitwise shift
 g = g.astype(np.uint8) >> (8 - B)
 
-# Opening file
-R = np.load(filename).astype(np.uint8)
-
-print(RSE(g,R))
+print(RSE(g, filename))
 
 # Ploting images
+R = np.load(filename).astype(np.uint8)
+
 plt.figure()
 fig = plt.subplot(2, 2,1)
 plt.imshow(g, cmap="gray")
