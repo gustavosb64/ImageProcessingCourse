@@ -1,5 +1,5 @@
 import numpy as np
-#import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt 
 import imageio
 
 # Method 1
@@ -31,6 +31,7 @@ def filtering_1d(I):
     weight = np.array(list(map(int, input().split())))
 
     c = int(n/2)
+
     """
     I = np.array([ [1,2,3] , [4,5,6] , [7,8,9] ])
     weight = np.array([0.5, 0.3, 0.2])
@@ -42,7 +43,6 @@ def filtering_1d(I):
     I_wrap = np.copy(I.flatten())
     I_wrap = np.pad(I_wrap, (c,c), 'wrap')
 
-    
     N = len(I.flatten())
     wn = len(weight)
 
@@ -85,23 +85,56 @@ def filtering_2d(I):
 
     return limiarization(I_new)
 
+def median_filter(I):
+    
+    n = int(input())
+
+    """
+    n = 3
+    I = np.array([ [23, 5, 39, 45, 50],
+                   [70, 88, 12, 100, 110],
+                   [130, 145, 159, 136, 137],
+                   [19, 200, 201, 220, 203],
+                   [131, 32, 133, 34, 135] ])
+    """
+
+    c = int(n/2)
+
+    N = I.shape[0]
+
+    I_pad = np.copy(I)
+    I_pad = np.pad(I_pad, (c,c), mode='constant', constant_values=0)
+
+    I_new = np.zeros(I.shape)
+    for i in range(c,N+c):
+        for j in range(c,N+c):
+            R = np.sort(I_pad[i-c:i+c+1, j-c:j+c+1].flatten())
+            I_new[i-c][j-c] = R[int((n**2)/2)]
+#            I_new[i-c][j-c] = np.median(I_pad[i-c:i+c+1, j-c:j+c+1].flatten())
+
+    return I_new
+
+def normalisation(g):
+    min_value = np.min(g)
+    max_value = np.max(g)
+
+    res = (g - min_value) / (max_value - min_value) 
+    return res*255
+
 def plot_and_rmse(I, I_new):
     #RMSE
     print(np.sqrt(np.sum((I - I_new)**2)/(I.shape[0] * I.shape[1])))
 
-    """
     plt.subplot(221)
     plt.imshow(I,cmap="gray")
     plt.subplot(222)
     plt.imshow(I_new,cmap="gray")
     plt.show()
-    """
 
 # Reading filename and opening image
 filename = str(input()).rstrip()
 I = imageio.imread(filename)
 method = int(input())
-
 
 if method == 1:
     I_new = limiarization(I)
@@ -109,5 +142,8 @@ elif method == 2:
     I_new = filtering_1d(I)
 elif method == 3:
     I_new = filtering_2d(I)
+elif method == 4:
+    I_new = median_filter(I)
 
+I_new = normalisation(I_new)
 plot_and_rmse(I, I_new)
