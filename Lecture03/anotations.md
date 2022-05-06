@@ -1,7 +1,5 @@
 ### IMAGE FILTERING (video 3)
 
-    Some typical image processing filters
-    
     * **Smoothing (variance reduction)**
         * _Mean_: all values in the weight matrix are the mean value
         * _Weighed mean_: like the previous one, but some values can be weighed differently
