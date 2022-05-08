@@ -1,0 +1,14 @@
+image with less intensity of grey levels => lower contrast
+
+Logarithm alteration:
+    |-> Due to the logarithm function's nature, it shrinks the dynamic range.
+        |-> the dark levels of the input pixel are mapped into brighter ones, and the medium-bright are shrinked to a lower and brighter range
+
+
+Gamma adjustment operation:
+    |-> Its behaviour changes depending wether \gamma > 1
+
+Thresholding
+    |-> it gives a binary image
+    |-> Let L be the threshold. T(z) = 1 if z > L, T(z) = 0 otherwise
+
