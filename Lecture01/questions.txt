@@ -1,2 +1,0 @@
-Quantização:
-    Quais as técnicas para escolha dos pontos?
