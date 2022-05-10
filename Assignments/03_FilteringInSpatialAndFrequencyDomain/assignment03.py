@@ -1,3 +1,9 @@
+# Student: Gustavo 
+# USP number: 
+# Course code: SCC0251
+# Year/semestre: 2022/1st semester
+# Title: Assignment03 - Filtering in Spatial and Frequency Domain
+
 import numpy as np
 import matplotlib.pyplot as plt
 import imageio
@@ -37,8 +43,11 @@ I_fft = np.fft.fftshift(I_fft)
 # Multiplying the Fourier Spectrum by the filter
 I_new = np.multiply(I_fft, I_filter)
 
-# New plot uses the absolute value of the image
-I_new = np.abs(np.fft.ifft2(I_new))
+# Inverting the shift
+I_new = np.fft.ifftshift(I_new)
+
+# New plot uses the real value of the image
+I_new = np.real(np.fft.ifft2(I_new))
 I_new = normalization(I_new,0,255).astype(np.uint8)
 
 # Printing RMSE
