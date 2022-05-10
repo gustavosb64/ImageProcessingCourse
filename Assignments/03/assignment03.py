@@ -20,10 +20,6 @@ input_filename = str(input()).rstrip()
 filter_filename = str(input()).rstrip()
 ref_filename = str(input()).rstrip()
 
-input_filename = "TestCases-InputImages/"+input_filename
-filter_filename = "TestCases-InputImages/"+filter_filename
-ref_filename = "TestCases-InputImages/"+ref_filename
-
 # Opening images
 I_input = imageio.imread(input_filename)
 I_filter = imageio.imread(filter_filename)
@@ -43,7 +39,7 @@ I_new = np.multiply(I_fft, I_filter)
 
 # New plot uses the absolute value of the image
 I_new = np.abs(np.fft.ifft2(I_new))
-I_new = normalization(I_new,0,255)
+I_new = normalization(I_new,0,255).astype(np.uint8)
 
 # Printing RMSE
 print(rmse(I_ref, I_new))
@@ -55,7 +51,7 @@ plt.subplot(321)
 plt.title("Original")
 plt.imshow(I_input,cmap="gray")
 plt.subplot(322)
-plt.title("My filtered")
+plt.title("My filtered image")
 plt.imshow(I_new,cmap="gray")
 plt.subplot(323)
 plt.title("Spectrum")
