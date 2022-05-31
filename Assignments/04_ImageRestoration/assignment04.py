@@ -63,8 +63,8 @@ def clsq(g, h, gamma):
                            [-1,4,-1],
                            [0,-1,0] ])
     # Padding
-    width_ax0 = int( (I.shape[0]-laplacian.shape[0]) / 2 )
-    width_ax1 = int( (I.shape[1]-laplacian.shape[1]+1) / 2 ) 
+    width_ax0 = int( (g.shape[0]-laplacian.shape[0]) / 2 )
+    width_ax1 = int( (g.shape[1]-laplacian.shape[1]+1) / 2 ) 
     lap_padded = np.pad(laplacian, [width_ax0, width_ax1]) 
 
     # Passing matrices to frequency domain
@@ -132,10 +132,8 @@ elif method == 2:
     # Applying PSF
     psf = get_motion_psf(I.shape[0], I.shape[1], angle)
 
-    # Restoring image
-    I_psf = convolve(I, psf)
     #I_psf = I
-    I_new = rl(I_psf, psf, n_steps)
+    I_new = rl(I, psf, n_steps)
 
 # Printing RMSE 
 print(rmse(I, I_new)) 
@@ -144,11 +142,7 @@ plt.subplot(221)
 plt.title("Original")
 plt.imshow(I,cmap="gray")
 
-if method == 2:
-    plt.subplot(222)
-    plt.title("PSF")
-    plt.imshow(I_psf,cmap="gray")
-else:
+if method == 1:
     plt.subplot(222)
     plt.title("Gaussian")
     plt.imshow(I_gauss,cmap="gray")
