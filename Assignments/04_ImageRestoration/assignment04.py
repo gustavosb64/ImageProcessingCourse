@@ -132,7 +132,6 @@ elif method == 2:
     # Applying PSF
     psf = get_motion_psf(I.shape[0], I.shape[1], angle)
 
-    #I_psf = I
     I_new = rl(I, psf, n_steps)
 
 # Printing RMSE 

@@ -82,6 +82,8 @@ seed = int(input())
 I = imageio.imread(input_filename).astype(np.float32)
 I_ref = imageio.imread(ref_filename).astype(np.uint8)
 
+print(I.shape)
+
 # Generating centroids indices
 random.seed(seed)
 idx_centroids = np.sort(random.sample(range(0, I.shape[0]*I.shape[1]), k))
